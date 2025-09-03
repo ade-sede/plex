@@ -4,17 +4,42 @@
   lib,
   mountPoint,
   ...
-}: {
-  services.plex = {
-    enable = true;
-    openFirewall = true;
-    dataDir = "${mountPoint}/plex";
-    user = "root";
-    group = "root";
+}: let
+  plexPackage = pkgs.plex.override {
+    plexRaw = pkgs.plexRaw;
+  };
+in {
+  environment.systemPackages = [
+    plexPackage
+  ];
+
+  systemd.services.plex = {
+    description = "Plex Media Server";
+    after = ["network.target" "juicefs-mount.service"];
+    requires = ["juicefs-mount.service"];
+    bindsTo = ["juicefs-mount.service"];
+    wantedBy = ["multi-user.target"];
+
+    serviceConfig = {
+      Type = "simple";
+      User = "root";
+      Group = "root";
+      ExecStart = "${plexPackage}/bin/plexmediaserver";
+      KillSignal = "SIGQUIT";
+      PIDFile = "${mountPoint}/plex/Plex Media Server/plexmediaserver.pid";
+      Restart = "on-failure";
+    };
+
+    environment = {
+      PLEX_DATADIR = "${mountPoint}/plex";
+      LD_LIBRARY_PATH = "/run/opengl-driver/lib";
+      PLEX_MEDIA_SERVER_MAX_PLUGIN_PROCS = "6";
+      PLEX_MEDIA_SERVER_TMPDIR = "/tmp";
+      PLEX_MEDIA_SERVER_USE_SYSLOG = "true";
+      LC_ALL = "en_US.UTF-8";
+      LANG = "en_US.UTF-8";
+    };
   };
 
-  systemd.services.plex.after = ["juicefs-mount.service"];
-  systemd.services.plex.requires = ["juicefs-mount.service"];
-  systemd.services.plex.bindsTo = ["juicefs-mount.service"];
-  systemd.services.plex.wantedBy = ["multi-user.target"];
+  networking.firewall.allowedTCPPorts = [32400];
 }
