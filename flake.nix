@@ -1,5 +1,5 @@
 {
-  description = "Plex system configuration";
+  description = "Plex & Jellyfin system configuration";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -12,7 +12,6 @@
     juiceFsDir = "/var/lib/juice-fs";
     dbPath = "${juiceFsDir}/metadata.db";
     mountPoint = "${juiceFsDir}/mountpoint";
-    domains = ["plex.ade-sede.com"];
     email = "adrien.de.sede@gmail.com";
 
     # SECRETS - Fill these in but NEVER commit them
@@ -23,7 +22,7 @@
     nixosConfigurations.plex = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = {
-        inherit juiceFsDir dbPath mountPoint domains email BUCKET_URL ACCESS_KEY SECRET_KEY;
+        inherit juiceFsDir dbPath mountPoint email BUCKET_URL ACCESS_KEY SECRET_KEY;
       };
       modules = [
         ./hardware-configuration.nix
@@ -33,6 +32,7 @@
         ./nix/sqlite.nix
         ./nix/juicefs.nix
         ./nix/plex.nix
+        ./nix/jellyfin.nix
         ./nix/nginx.nix
       ];
     };

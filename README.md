@@ -1,11 +1,11 @@
-# Plex Media Server Setup
+# Plex & Jellyfin Media Server Setup
 
-This guide explains how to create a Plex media server with distributed storage using JuiceFS and Scaleway object storage.
+This guide explains how to create Plex and Jellyfin media servers with distributed storage using JuiceFS and Scaleway object storage.
 
 ## Basic working principle
 
 - Movies are stored in Object storages
-- We trick plex into thinking the object storage is a normal local filesystem using JuiceFS
+- We trick Plex/Jellyfin into thinking the object storage is a normal local filesystem using JuiceFS
 - JuiceFS stores some metadata in a SQLite database to help keep track of where things are
 - JuiceFS uses FUSE (Filesystem in Userspace) to mount the cloud storage as a local directory
 
@@ -14,15 +14,15 @@ This guide explains how to create a Plex media server with distributed storage u
 The system uses 4 systemd services with cascading dependencies:
 
 ```
-sqlite-setup → juicefs-setup → juicefs-mount → plex
+sqlite-setup → juicefs-setup → juicefs-mount → plex/jellyfin
 ```
 
 1. **sqlite-setup** - Creates SQLite database for JuiceFS metadata
 1. **juicefs-setup** - Formats JuiceFS filesystem and creates mount directories
 1. **juicefs-mount** - Mounts JuiceFS as FUSE filesystem
-1. **plex** - Runs Plex Media Server using the mounted filesystem
+1. **plex/jellyfin** - Runs both media servers using the mounted filesystem
 
-Starting/stopping plex automatically starts/stops all dependent services in the correct order.
+Starting/stopping either service automatically starts/stops all dependent services in the correct order.
 
 ## Basic installation principles
 
@@ -125,6 +125,15 @@ SECRET_KEY = "your-scaleway-secret-key";
 
 **⚠️ IMPORTANT**: Never commit these actual values to git. The secrets should only exist in your local working copy.
 
+## Domain Configuration
+
+Domains are hardcoded in `nix/nginx.nix`. To change them, edit the virtualHosts section:
+
+- `plex.ade-sede.com` - Plex server (port 32400)
+- `jellyfin.ade-sede.com` - Jellyfin server (port 8096)
+
+Make sure your DNS records point to your server IP before rebuilding.
+
 ### 5. Deploy NixOS configuration
 
 ```bash
@@ -158,14 +167,25 @@ export USERNAME=ade-sede
 ssh-copy-id $USERNAME@$SERVER_IP
 ```
 
-## Initial Plex Setup
+## Initial Media Server Setup
 
-1. Navigate to any of your configured domains: `https://plex.yourdomain.com`
+### Plex Setup
+
+1. Navigate to `https://plex.ade-sede.com`
 1. Create/sign in to a Plex account to claim the server
 1. Complete the initial setup wizard
-1. Add media libraries pointing to `${mountPoint}/media/` (default: `/var/lib/juice-fs/mountpoint/plex/media/`)
+1. Add media libraries pointing to `/var/lib/juice-fs/mountpoint/plex/media/`
+
+### Jellyfin Setup
+
+1. Navigate to `https://jellyfin.ade-sede.com`
+1. Complete the initial setup wizard
+1. Create admin account
+1. Add media libraries pointing to `/var/lib/juice-fs/mountpoint/jellyfin/media/`
 
 ## User Management
+
+### Plex
 
 Access Plex admin settings to:
 
@@ -173,6 +193,14 @@ Access Plex admin settings to:
 - Create home users for family members
 - Set library access permissions per user
 - Configure content restrictions and ratings
+
+### Jellyfin
+
+Access Jellyfin admin dashboard to:
+
+- Create user accounts
+- Set library permissions per user
+- Configure parental controls and content filters
 
 ## File Management
 
@@ -182,11 +210,15 @@ Media files are stored in the JuiceFS distributed filesystem:
 # SSH as admin user (root access via sudo)
 ssh ade-sede@$SERVER_IP
 
-# Media storage location
+# Media storage locations
 ls /var/lib/juice-fs/mountpoint/plex/
+ls /var/lib/juice-fs/mountpoint/jellyfin/
 
 # Upload media files (as root)
+# For Plex
 sudo scp -r /path/to/media root@$SERVER_IP:/var/lib/juice-fs/mountpoint/plex/media/
+# For Jellyfin  
+sudo scp -r /path/to/media root@$SERVER_IP:/var/lib/juice-fs/mountpoint/jellyfin/media/
 ```
 
 ## Server Management
@@ -195,14 +227,16 @@ sudo scp -r /path/to/media root@$SERVER_IP:/var/lib/juice-fs/mountpoint/plex/med
 # Check JuiceFS mount status
 ssh ade-sede@$SERVER_IP "df -h /var/lib/juice-fs/mountpoint"
 
-# Check Plex service status
+# Check service status
 ssh ade-sede@$SERVER_IP "sudo systemctl status plex"
+ssh ade-sede@$SERVER_IP "sudo systemctl status jellyfin"
 
 # Check nginx status
 ssh ade-sede@$SERVER_IP "sudo systemctl status nginx"
 
 # View logs
 ssh ade-sede@$SERVER_IP "sudo journalctl -u plex -f"
+ssh ade-sede@$SERVER_IP "sudo journalctl -u jellyfin -f"
 ssh ade-sede@$SERVER_IP "sudo journalctl -u nginx -f"
 
 # Stop/start server (preserves storage)
