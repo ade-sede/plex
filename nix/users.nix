@@ -19,14 +19,5 @@
     createHome = true;
   };
 
-  users.users.plex = {
-    isSystemUser = true;
-    group = "plex";
-    home = "/home/plex";
-    createHome = true;
-  };
-
-  users.groups.plex = {};
-
   security.sudo.wheelNeedsPassword = false;
 }

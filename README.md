@@ -103,7 +103,7 @@ git push
 ### 3. Clone repository on remote server
 
 ```bash
-ssh root@$SERVER_IP "git clone https://github.com/ade-sede/plex.git /home/plex/.dotfiles"
+ssh root@$SERVER_IP "git clone https://github.com/ade-sede/plex.git /var/lib/install"
 ```
 
 ### 4. Configure secrets
@@ -128,7 +128,7 @@ SECRET_KEY = "your-scaleway-secret-key";
 ### 5. Deploy NixOS configuration
 
 ```bash
-ssh root@$SERVER_IP "cd /home/plex/.dotfiles && nixos-rebuild switch --flake .#plex"
+ssh root@$SERVER_IP "cd /var/lib/install && nixos-rebuild switch --flake .#plex"
 ```
 
 **Note**: The SSL certificate generation will fail if the domain names are not setup yet. That's fine, you can simply rebuild later after making sure the domain name points toward the server.
@@ -163,7 +163,7 @@ ssh-copy-id $USERNAME@$SERVER_IP
 1. Navigate to any of your configured domains: `https://plex.yourdomain.com`
 1. Create/sign in to a Plex account to claim the server
 1. Complete the initial setup wizard
-1. Add media libraries pointing to `${mountPoint}/media/` (default: `/home/plex/jfs/media/`)
+1. Add media libraries pointing to `${mountPoint}/media/` (default: `/var/lib/juice-fs/mountpoint/plex/media/`)
 
 ## User Management
 
@@ -179,31 +179,31 @@ Access Plex admin settings to:
 Media files are stored in the JuiceFS distributed filesystem:
 
 ```bash
-# SSH as plex user
-ssh plex@$SERVER_IP
+# SSH as admin user (root access via sudo)
+ssh ade-sede@$SERVER_IP
 
 # Media storage location
-ls /home/plex/jfs/
+ls /var/lib/juice-fs/mountpoint/plex/
 
-# Upload media files
-scp -r /path/to/media plex@$SERVER_IP:/home/plex/jfs/media/
+# Upload media files (as root)
+sudo scp -r /path/to/media root@$SERVER_IP:/var/lib/juice-fs/mountpoint/plex/media/
 ```
 
 ## Server Management
 
 ```bash
 # Check JuiceFS mount status
-ssh plex@$SERVER_IP "df -h /home/plex/jfs"
+ssh ade-sede@$SERVER_IP "df -h /var/lib/juice-fs/mountpoint"
 
 # Check Plex service status
-ssh root@$SERVER_IP "systemctl status plex"
+ssh ade-sede@$SERVER_IP "sudo systemctl status plex"
 
 # Check nginx status
-ssh root@$SERVER_IP "systemctl status nginx"
+ssh ade-sede@$SERVER_IP "sudo systemctl status nginx"
 
 # View logs
-ssh root@$SERVER_IP "journalctl -u plex -f"
-ssh root@$SERVER_IP "journalctl -u nginx -f"
+ssh ade-sede@$SERVER_IP "sudo journalctl -u plex -f"
+ssh ade-sede@$SERVER_IP "sudo journalctl -u nginx -f"
 
 # Stop/start server (preserves storage)
 scw instance server stop $SERVER_ID

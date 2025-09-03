@@ -9,8 +9,8 @@
     enable = true;
     openFirewall = true;
     dataDir = "${mountPoint}/plex";
-    user = "plex";
-    group = "plex";
+    user = "root";
+    group = "root";
   };
 
   systemd.services.plex.after = ["juicefs-mount.service"];
