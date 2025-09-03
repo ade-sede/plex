@@ -11,7 +11,7 @@
 }: let
   juicefs-setup-script = pkgs.writeShellScript "juicefs-setup" ''
     ${pkgs.coreutils}/bin/mkdir -p ${juiceFsDir} && ${pkgs.coreutils}/bin/chown root:root ${juiceFsDir}
-    ${pkgs.coreutils}/bin/mkdir -p ${mountPoint} && ${pkgs.coreutils}/bin/chown root:juicefs ${mountPoint} && ${pkgs.coreutils}/bin/chmod 775 ${mountPoint}
+    ${pkgs.coreutils}/bin/mkdir -p ${mountPoint} && ${pkgs.coreutils}/bin/chown -R root:juicefs ${mountPoint} && ${pkgs.coreutils}/bin/chmod -R 775 ${mountPoint}
   '';
   juicefs-mount-script = pkgs.writeShellScript "juicefs-mount" ''
     ${pkgs.juicefs}/bin/juicefs mount sqlite3://${dbPath} ${mountPoint} --background
