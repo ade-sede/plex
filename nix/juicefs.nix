@@ -22,7 +22,7 @@ in {
     wantedBy = [];
     after = ["sqlite-setup.service"];
     requires = ["sqlite-setup.service"];
-    bindsTo = ["sqlite-setup.service"];
+    partOf = ["plex.service"];
     serviceConfig = {
       Type = "oneshot";
       User = "root";
@@ -48,7 +48,7 @@ in {
     wantedBy = [];
     after = ["juicefs-setup.service"];
     requires = ["juicefs-setup.service"];
-    bindsTo = ["juicefs-setup.service"];
+    partOf = ["plex.service"];
     serviceConfig = {
       Type = "forking";
       User = "root";

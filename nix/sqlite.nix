@@ -8,6 +8,7 @@
   systemd.services.sqlite-setup = {
     description = "Setup SQLite database to track JuiceFS metadata";
     wantedBy = [];
+    partOf = ["plex.service"];
     serviceConfig = {
       Type = "oneshot";
       User = "plex";
