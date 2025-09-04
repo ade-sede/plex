@@ -103,7 +103,7 @@ git push
 ### 3. Clone repository on remote server
 
 ```bash
-ssh root@$SERVER_IP "git clone https://github.com/ade-sede/plex.git /var/lib/install"
+ssh root@$SERVER_IP "git clone https://github.com/ade-sede/media-center.git /var/lib/install"
 ```
 
 ### 4. Configure secrets
@@ -165,84 +165,4 @@ export USERNAME=ade-sede
 
 # Copy SSH key for passwordless access
 ssh-copy-id $USERNAME@$SERVER_IP
-```
-
-## Initial Media Server Setup
-
-### Plex Setup
-
-1. Navigate to `https://plex.ade-sede.com`
-1. Create/sign in to a Plex account to claim the server
-1. Complete the initial setup wizard
-1. Add media libraries pointing to `/var/lib/juice-fs/mountpoint/plex/media/`
-
-### Jellyfin Setup
-
-1. Navigate to `https://jellyfin.ade-sede.com`
-1. Complete the initial setup wizard
-1. Create admin account
-1. Add media libraries pointing to `/var/lib/juice-fs/mountpoint/jellyfin/media/`
-
-## User Management
-
-### Plex
-
-Access Plex admin settings to:
-
-- Invite friends and family via email
-- Create home users for family members
-- Set library access permissions per user
-- Configure content restrictions and ratings
-
-### Jellyfin
-
-Access Jellyfin admin dashboard to:
-
-- Create user accounts
-- Set library permissions per user
-- Configure parental controls and content filters
-
-## File Management
-
-Media files are stored in the JuiceFS distributed filesystem:
-
-```bash
-# SSH as admin user (root access via sudo)
-ssh ade-sede@$SERVER_IP
-
-# Media storage locations
-ls /var/lib/juice-fs/mountpoint/plex/
-ls /var/lib/juice-fs/mountpoint/jellyfin/
-
-# Upload media files (as root)
-# For Plex
-sudo scp -r /path/to/media root@$SERVER_IP:/var/lib/juice-fs/mountpoint/plex/media/
-# For Jellyfin  
-sudo scp -r /path/to/media root@$SERVER_IP:/var/lib/juice-fs/mountpoint/jellyfin/media/
-```
-
-## Server Management
-
-```bash
-# Check JuiceFS mount status
-ssh ade-sede@$SERVER_IP "df -h /var/lib/juice-fs/mountpoint"
-
-# Check service status
-ssh ade-sede@$SERVER_IP "sudo systemctl status plex"
-ssh ade-sede@$SERVER_IP "sudo systemctl status jellyfin"
-
-# Check nginx status
-ssh ade-sede@$SERVER_IP "sudo systemctl status nginx"
-
-# View logs
-ssh ade-sede@$SERVER_IP "sudo journalctl -u plex -f"
-ssh ade-sede@$SERVER_IP "sudo journalctl -u jellyfin -f"
-ssh ade-sede@$SERVER_IP "sudo journalctl -u nginx -f"
-
-# Stop/start server (preserves storage)
-scw instance server stop $SERVER_ID
-scw instance server start $SERVER_ID
-
-# Delete server (preserves object storage)
-scw instance server terminate $SERVER_ID
 ```
