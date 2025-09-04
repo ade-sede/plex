@@ -54,7 +54,7 @@ in {
           '';
         };
         locations."/sonarr/" = {
-          proxyPass = "http://127.0.0.1:8989/";
+          proxyPass = "http://127.0.0.1:8989/sonarr/";
           proxyWebsockets = true;
           basicAuth = "Sonarr Access";
           basicAuthFile = "${httpAuth}";
@@ -96,7 +96,7 @@ in {
           '';
         };
         locations."/sonarr/" = {
-          proxyPass = "http://127.0.0.1:8989/";
+          proxyPass = "http://127.0.0.1:8989/sonarr/";
           proxyWebsockets = true;
           basicAuth = "Sonarr Access";
           basicAuthFile = "${httpAuth}";
