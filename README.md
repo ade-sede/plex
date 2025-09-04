@@ -167,32 +167,22 @@ export USERNAME=ade-sede
 ssh-copy-id $USERNAME@$SERVER_IP
 ```
 
-## qBittorrent Initial Setup
+## qBittorrent Setup
 
-qBittorrent-nox requires manual first-time initialization to accept the legal disclaimer and generate default WebUI credentials.
+qBittorrent-nox is configured to run automatically as a systemd service. The legal disclaimer is automatically accepted via the `--confirm-legal-notice` flag.
 
-### First Launch (Required)
+### WebUI Access
 
-SSH into your server and run qBittorrent manually for the first time:
+The WebUI is accessible via nginx reverse proxy at:
 
-```bash
-ssh ade-sede@$SERVER_IP
-sudo -u qbittorrent qbittorrent-nox
-```
+- **https://plex.ade-sede.com/torrent/**
+- **https://jellyfin.ade-sede.com/torrent/**
 
-This will:
+### Initial Password Setup (Required)
 
-1. Prompt you to accept the legal disclaimer (type "y" and press Enter)
-1. Display the WebUI URL (usually http://localhost:8080)
-1. Show default credentials (username: admin, temporary password displayed)
+On first access to the WebUI:
 
-Press `Ctrl+C` to stop qBittorrent after completing the initial setup.
-
-### Enable as System Service
-
-After initial setup, qBittorrent can be configured as a systemd service. The WebUI will be accessible at:
-
-- Direct: `http://your-server-ip:8080`
-- Via domain: `http://qbittorrent.ade-sede.com` (if configured in nginx)
-
-**Note**: The initial password is temporary and should be changed via the WebUI at Settings > Web UI for security.
+1. Login with username: `ade-sede` (no password required initially)
+1. Go to Tools > Options > Web UI > Authentication
+1. Set your desired WebUI password
+1. The password will be permanently saved and remembered across restarts
