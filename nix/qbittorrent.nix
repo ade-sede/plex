@@ -38,7 +38,7 @@
 
       [Preferences]
       WebUI\Enabled=true
-      WebUI\LocalHostAuth=true
+      WebUI\LocalHostAuth=false
       WebUI\Port=${toString qbittorrentWebUIPort}
       WebUI\Username=ade-sede
 

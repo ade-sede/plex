@@ -3,8 +3,14 @@
   pkgs,
   email,
   qbittorrentWebUIPort,
+  qbittorrentNginxPassword,
   ...
-}: {
+}: let
+  # Create htpasswd file for qBittorrent auth using openssl
+  qbittorrentAuth = pkgs.runCommand "qbittorrent-htpasswd" {} ''
+    echo "ade-sede:$(${pkgs.openssl}/bin/openssl passwd -apr1 '${qbittorrentNginxPassword}')" > $out
+  '';
+in {
   services.nginx = {
     enable = true;
     recommendedGzipSettings = true;
@@ -37,6 +43,8 @@
         locations."/torrent/" = {
           proxyPass = "http://127.0.0.1:${toString qbittorrentWebUIPort}/";
           proxyWebsockets = true;
+          basicAuth = "qBittorrent Access";
+          basicAuthFile = "${qbittorrentAuth}";
           extraConfig = ''
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -63,6 +71,8 @@
         locations."/torrent/" = {
           proxyPass = "http://127.0.0.1:${toString qbittorrentWebUIPort}/";
           proxyWebsockets = true;
+          basicAuth = "qBittorrent Access";
+          basicAuthFile = "${qbittorrentAuth}";
           extraConfig = ''
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;

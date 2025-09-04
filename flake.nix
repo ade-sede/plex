@@ -21,11 +21,12 @@
     BUCKET_URL = "REPLACE_ME";
     ACCESS_KEY = "REPLACE_ME";
     SECRET_KEY = "REPLACE_ME";
+    qbittorrentNginxPassword = "REPLACE_ME";
   in {
     nixosConfigurations.plex = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = {
-        inherit juiceFsDir dbPath mountPoint email BUCKET_URL ACCESS_KEY SECRET_KEY qbittorrentWebUIPort qbittorrentDownloadDir;
+        inherit juiceFsDir dbPath mountPoint email BUCKET_URL ACCESS_KEY SECRET_KEY qbittorrentWebUIPort qbittorrentDownloadDir qbittorrentNginxPassword;
       };
       modules = [
         ./hardware-configuration.nix

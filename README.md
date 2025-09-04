@@ -178,11 +178,11 @@ The WebUI is accessible via nginx reverse proxy at:
 - **https://plex.ade-sede.com/torrent/**
 - **https://jellyfin.ade-sede.com/torrent/**
 
-### Initial Password Setup (Required)
+### Authentication
 
-On first access to the WebUI:
+The WebUI is protected by nginx HTTP Basic Authentication:
 
-1. Login with username: `ade-sede` (no password required initially)
-1. Go to Tools > Options > Web UI > Authentication
-1. Set your desired WebUI password
-1. The password will be permanently saved and remembered across restarts
+- **Username**: `ade-sede`
+- **Password**: Set via `qbittorrentNginxPassword` in flake.nix
+
+Your browser will prompt for credentials when accessing the WebUI. Once authenticated, you'll have full access to the qBittorrent interface without additional login prompts.
