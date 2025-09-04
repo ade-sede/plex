@@ -67,6 +67,20 @@ in {
             proxy_set_header X-Forwarded-Prefix /sonarr;
           '';
         };
+        locations."/prowlarr/" = {
+          proxyPass = "http://127.0.0.1:9696/prowlarr/";
+          proxyWebsockets = true;
+          basicAuth = "Prowlarr Access";
+          basicAuthFile = "${httpAuth}";
+          extraConfig = ''
+            proxy_buffering off;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_set_header X-Forwarded-Host $http_host;
+            proxy_set_header X-Forwarded-Prefix /prowlarr;
+          '';
+        };
       };
       "jellyfin.ade-sede.com" = {
         enableACME = true;
@@ -107,6 +121,20 @@ in {
             proxy_set_header X-Forwarded-Proto $scheme;
             proxy_set_header X-Forwarded-Host $http_host;
             proxy_set_header X-Forwarded-Prefix /sonarr;
+          '';
+        };
+        locations."/prowlarr/" = {
+          proxyPass = "http://127.0.0.1:9696/prowlarr/";
+          proxyWebsockets = true;
+          basicAuth = "Prowlarr Access";
+          basicAuthFile = "${httpAuth}";
+          extraConfig = ''
+            proxy_buffering off;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_set_header X-Forwarded-Host $http_host;
+            proxy_set_header X-Forwarded-Prefix /prowlarr;
           '';
         };
       };
