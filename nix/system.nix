@@ -19,6 +19,7 @@
     sqlite
     juicefs
     fuse
+    qbittorrent-nox
   ];
 
   system.stateVersion = "24.11";

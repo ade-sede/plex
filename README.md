@@ -166,3 +166,33 @@ export USERNAME=ade-sede
 # Copy SSH key for passwordless access
 ssh-copy-id $USERNAME@$SERVER_IP
 ```
+
+## qBittorrent Initial Setup
+
+qBittorrent-nox requires manual first-time initialization to accept the legal disclaimer and generate default WebUI credentials.
+
+### First Launch (Required)
+
+SSH into your server and run qBittorrent manually for the first time:
+
+```bash
+ssh ade-sede@$SERVER_IP
+sudo -u qbittorrent qbittorrent-nox
+```
+
+This will:
+
+1. Prompt you to accept the legal disclaimer (type "y" and press Enter)
+1. Display the WebUI URL (usually http://localhost:8080)
+1. Show default credentials (username: admin, temporary password displayed)
+
+Press `Ctrl+C` to stop qBittorrent after completing the initial setup.
+
+### Enable as System Service
+
+After initial setup, qBittorrent can be configured as a systemd service. The WebUI will be accessible at:
+
+- Direct: `http://your-server-ip:8080`
+- Via domain: `http://qbittorrent.ade-sede.com` (if configured in nginx)
+
+**Note**: The initial password is temporary and should be changed via the WebUI at Settings > Web UI for security.
