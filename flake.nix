@@ -22,11 +22,12 @@
     ACCESS_KEY = "REPLACE_ME";
     SECRET_KEY = "REPLACE_ME";
     qbittorrentNginxPassword = "REPLACE_ME";
+    sonarrNginxPassword = "REPLACE_ME";
   in {
     nixosConfigurations.plex = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = {
-        inherit juiceFsDir dbPath mountPoint email BUCKET_URL ACCESS_KEY SECRET_KEY qbittorrentWebUIPort qbittorrentDownloadDir qbittorrentNginxPassword;
+        inherit juiceFsDir dbPath mountPoint email BUCKET_URL ACCESS_KEY SECRET_KEY qbittorrentWebUIPort qbittorrentDownloadDir qbittorrentNginxPassword sonarrNginxPassword;
       };
       modules = [
         ./hardware-configuration.nix
@@ -38,6 +39,7 @@
         ./nix/plex.nix
         ./nix/jellyfin.nix
         ./nix/qbittorrent.nix
+        ./nix/sonarr.nix
         ./nix/nginx.nix
       ];
     };

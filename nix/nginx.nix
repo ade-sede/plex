@@ -4,11 +4,17 @@
   email,
   qbittorrentWebUIPort,
   qbittorrentNginxPassword,
+  sonarrNginxPassword,
   ...
 }: let
   # Create htpasswd file for qBittorrent auth using openssl
   qbittorrentAuth = pkgs.runCommand "qbittorrent-htpasswd" {} ''
     echo "ade-sede:$(${pkgs.openssl}/bin/openssl passwd -apr1 '${qbittorrentNginxPassword}')" > $out
+  '';
+
+  # Create htpasswd file for Sonarr auth using openssl
+  sonarrAuth = pkgs.runCommand "sonarr-htpasswd" {} ''
+    echo "ade-sede:$(${pkgs.openssl}/bin/openssl passwd -apr1 '${sonarrNginxPassword}')" > $out
   '';
 in {
   services.nginx = {
@@ -53,6 +59,20 @@ in {
             proxy_set_header X-Forwarded-Prefix /torrent;
           '';
         };
+        locations."/sonarr/" = {
+          proxyPass = "http://127.0.0.1:8989/";
+          proxyWebsockets = true;
+          basicAuth = "Sonarr Access";
+          basicAuthFile = "${sonarrAuth}";
+          extraConfig = ''
+            proxy_buffering off;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_set_header X-Forwarded-Host $http_host;
+            proxy_set_header X-Forwarded-Prefix /sonarr;
+          '';
+        };
       };
       "jellyfin.ade-sede.com" = {
         enableACME = true;
@@ -79,6 +99,20 @@ in {
             proxy_set_header X-Forwarded-Proto $scheme;
             proxy_set_header X-Forwarded-Host $http_host;
             proxy_set_header X-Forwarded-Prefix /torrent;
+          '';
+        };
+        locations."/sonarr/" = {
+          proxyPass = "http://127.0.0.1:8989/";
+          proxyWebsockets = true;
+          basicAuth = "Sonarr Access";
+          basicAuthFile = "${sonarrAuth}";
+          extraConfig = ''
+            proxy_buffering off;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_set_header X-Forwarded-Host $http_host;
+            proxy_set_header X-Forwarded-Prefix /sonarr;
           '';
         };
       };
