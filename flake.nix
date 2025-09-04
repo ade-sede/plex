@@ -14,15 +14,19 @@
     mountPoint = "${juiceFsDir}/mountpoint";
     email = "adrien.de.sede@gmail.com";
 
+    qbittorrentWebUIPort = 8080;
+    qbittorrentDownloadDir = "${juiceFsDir}/mountpoint/downloads";
+
     # SECRETS - Fill these in but NEVER commit them
     BUCKET_URL = "REPLACE_ME";
     ACCESS_KEY = "REPLACE_ME";
     SECRET_KEY = "REPLACE_ME";
+    qbittorrentWebUIPassword = "REPLACE_ME";
   in {
     nixosConfigurations.plex = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = {
-        inherit juiceFsDir dbPath mountPoint email BUCKET_URL ACCESS_KEY SECRET_KEY;
+        inherit juiceFsDir dbPath mountPoint email BUCKET_URL ACCESS_KEY SECRET_KEY qbittorrentWebUIPort qbittorrentDownloadDir qbittorrentWebUIPassword;
       };
       modules = [
         ./hardware-configuration.nix
@@ -33,6 +37,7 @@
         ./nix/juicefs.nix
         ./nix/plex.nix
         ./nix/jellyfin.nix
+        ./nix/qbittorrent.nix
         ./nix/nginx.nix
       ];
     };
