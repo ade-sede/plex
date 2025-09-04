@@ -9,7 +9,7 @@
   ...
 }: let
   # Generate PBKDF2 hash for the password (simplified approach)
-  passwordHash = builtins.hashString "sha256" "admin:${qbittorrentWebUIPassword}";
+  passwordHash = builtins.hashString "sha256" "ade-sede:${qbittorrentWebUIPassword}";
 in {
   environment.systemPackages = [
     pkgs.qbittorrent-nox
@@ -42,9 +42,9 @@ in {
 
       [Preferences]
       WebUI\Enabled=true
-      WebUI\LocalHostAuth=false
+      WebUI\LocalHostAuth=true
       WebUI\Port=${toString qbittorrentWebUIPort}
-      WebUI\Username=admin
+      WebUI\Username=ade-sede
       WebUI\Password_PBKDF2="@ByteArray(${passwordHash})"
       Downloads\SavePath=${qbittorrentDownloadDir}
       General\UseRandomPort=true
