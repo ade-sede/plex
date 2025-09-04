@@ -3,18 +3,12 @@
   pkgs,
   email,
   qbittorrentWebUIPort,
-  qbittorrentNginxPassword,
-  sonarrNginxPassword,
+  HTTP_PASSWORD,
   ...
 }: let
-  # Create htpasswd file for qBittorrent auth using openssl
-  qbittorrentAuth = pkgs.runCommand "qbittorrent-htpasswd" {} ''
-    echo "ade-sede:$(${pkgs.openssl}/bin/openssl passwd -apr1 '${qbittorrentNginxPassword}')" > $out
-  '';
-
-  # Create htpasswd file for Sonarr auth using openssl
-  sonarrAuth = pkgs.runCommand "sonarr-htpasswd" {} ''
-    echo "ade-sede:$(${pkgs.openssl}/bin/openssl passwd -apr1 '${sonarrNginxPassword}')" > $out
+  # Create htpasswd file for HTTP auth using openssl
+  httpAuth = pkgs.runCommand "http-htpasswd" {} ''
+    echo "ade-sede:$(${pkgs.openssl}/bin/openssl passwd -apr1 '${HTTP_PASSWORD}')" > $out
   '';
 in {
   services.nginx = {
@@ -50,7 +44,7 @@ in {
           proxyPass = "http://127.0.0.1:${toString qbittorrentWebUIPort}/";
           proxyWebsockets = true;
           basicAuth = "qBittorrent Access";
-          basicAuthFile = "${qbittorrentAuth}";
+          basicAuthFile = "${httpAuth}";
           extraConfig = ''
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -63,7 +57,7 @@ in {
           proxyPass = "http://127.0.0.1:8989/";
           proxyWebsockets = true;
           basicAuth = "Sonarr Access";
-          basicAuthFile = "${sonarrAuth}";
+          basicAuthFile = "${httpAuth}";
           extraConfig = ''
             proxy_buffering off;
             proxy_set_header X-Real-IP $remote_addr;
@@ -92,7 +86,7 @@ in {
           proxyPass = "http://127.0.0.1:${toString qbittorrentWebUIPort}/";
           proxyWebsockets = true;
           basicAuth = "qBittorrent Access";
-          basicAuthFile = "${qbittorrentAuth}";
+          basicAuthFile = "${httpAuth}";
           extraConfig = ''
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -105,7 +99,7 @@ in {
           proxyPass = "http://127.0.0.1:8989/";
           proxyWebsockets = true;
           basicAuth = "Sonarr Access";
-          basicAuthFile = "${sonarrAuth}";
+          basicAuthFile = "${httpAuth}";
           extraConfig = ''
             proxy_buffering off;
             proxy_set_header X-Real-IP $remote_addr;
