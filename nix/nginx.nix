@@ -19,11 +19,11 @@ in {
     recommendedTlsSettings = true;
 
     virtualHosts = {
-      "plex.ade-sede.com" = {
+      "media.ade-sede.com" = {
         enableACME = true;
         forceSSL = true;
-        locations."/" = {
-          proxyPass = "http://127.0.0.1:32400";
+        locations."/plex/" = {
+          proxyPass = "http://127.0.0.1:32400/";
           proxyWebsockets = true;
           extraConfig = ''
             proxy_set_header X-Plex-Client-Identifier $http_x_plex_client_identifier;
@@ -38,83 +38,13 @@ in {
             proxy_set_header X-Plex-Provides $http_x_plex_provides;
             proxy_set_header X-Plex-Device-Vendor $http_x_plex_device_vendor;
             proxy_set_header X-Plex-Model $http_x_plex_model;
-          '';
-        };
-        locations."/torrent/" = {
-          proxyPass = "http://127.0.0.1:${toString qbittorrentWebUIPort}/";
-          proxyWebsockets = true;
-          basicAuth = "qBittorrent Access";
-          basicAuthFile = "${httpAuth}";
-          extraConfig = ''
-            proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
             proxy_set_header X-Forwarded-Proto $scheme;
             proxy_set_header X-Forwarded-Host $http_host;
-            proxy_set_header X-Forwarded-Prefix /torrent;
           '';
         };
-        locations."/sonarr/" = {
-          proxyPass = "http://127.0.0.1:8989/sonarr/";
-          proxyWebsockets = true;
-          basicAuth = "Sonarr Access";
-          basicAuthFile = "${httpAuth}";
-          extraConfig = ''
-            proxy_buffering off;
-            proxy_set_header X-Real-IP $remote_addr;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_set_header X-Forwarded-Proto $scheme;
-            proxy_set_header X-Forwarded-Host $http_host;
-            proxy_set_header X-Forwarded-Prefix /sonarr;
-          '';
-        };
-        locations."/prowlarr/" = {
-          proxyPass = "http://127.0.0.1:9696/prowlarr/";
-          proxyWebsockets = true;
-          basicAuth = "Prowlarr Access";
-          basicAuthFile = "${httpAuth}";
-          extraConfig = ''
-            proxy_buffering off;
-            proxy_set_header X-Real-IP $remote_addr;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_set_header X-Forwarded-Proto $scheme;
-            proxy_set_header X-Forwarded-Host $http_host;
-            proxy_set_header X-Forwarded-Prefix /prowlarr;
-          '';
-        };
-        locations."/radarr/" = {
-          proxyPass = "http://127.0.0.1:7878/radarr/";
-          proxyWebsockets = true;
-          basicAuth = "Radarr Access";
-          basicAuthFile = "${httpAuth}";
-          extraConfig = ''
-            proxy_buffering off;
-            proxy_set_header X-Real-IP $remote_addr;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_set_header X-Forwarded-Proto $scheme;
-            proxy_set_header X-Forwarded-Host $http_host;
-            proxy_set_header X-Forwarded-Prefix /radarr;
-          '';
-        };
-        locations."/bazarr/" = {
-          proxyPass = "http://127.0.0.1:6767/bazarr/";
-          proxyWebsockets = true;
-          basicAuth = "Bazarr Access";
-          basicAuthFile = "${httpAuth}";
-          extraConfig = ''
-            proxy_buffering off;
-            proxy_set_header X-Real-IP $remote_addr;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_set_header X-Forwarded-Proto $scheme;
-            proxy_set_header X-Forwarded-Host $http_host;
-            proxy_set_header X-Forwarded-Prefix /bazarr;
-          '';
-        };
-      };
-      "jellyfin.ade-sede.com" = {
-        enableACME = true;
-        forceSSL = true;
-        locations."/" = {
-          proxyPass = "http://127.0.0.1:8096";
+        locations."/jellyfin/" = {
+          proxyPass = "http://127.0.0.1:8096/";
           proxyWebsockets = true;
           extraConfig = ''
             proxy_buffering off;
