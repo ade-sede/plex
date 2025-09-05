@@ -27,5 +27,10 @@
     environment = {
       LD_LIBRARY_PATH = "/run/opengl-driver/lib";
     };
+
+    serviceConfig = {
+      User = lib.mkForce "root";
+      Group = lib.mkForce "root";
+    };
   };
 }
