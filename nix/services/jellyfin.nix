@@ -22,6 +22,7 @@
     after = ["network.target" "juicefs-mount.service"];
     requires = ["juicefs-mount.service"];
     bindsTo = ["juicefs-mount.service"];
+    partOf = ["media-center.service"];
 
     environment = {
       LD_LIBRARY_PATH = "/run/opengl-driver/lib";

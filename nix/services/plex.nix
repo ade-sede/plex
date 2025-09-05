@@ -15,10 +15,10 @@ in {
 
   systemd.services.plex = {
     description = "Plex Media Server";
-    after = ["network.target" "juicefs-mount.service"];
-    requires = ["juicefs-mount.service"];
+    after = ["network.target" "juicefs-mount.service" "jellyfin.service" "sonarr.service"];
+    requires = ["juicefs-mount.service" "jellyfin.service" "sonarr.service"];
     bindsTo = ["juicefs-mount.service"];
-    wantedBy = ["multi-user.target"];
+    partOf = ["media-center.service"];
 
     serviceConfig = {
       Type = "simple";

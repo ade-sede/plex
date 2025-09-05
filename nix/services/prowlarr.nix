@@ -28,6 +28,7 @@
     after = ["network.target" "juicefs-mount.service"];
     requires = ["juicefs-mount.service"];
     bindsTo = ["juicefs-mount.service"];
+    partOf = ["media-center.service"];
 
     serviceConfig = {
       DynamicUser = lib.mkForce false;

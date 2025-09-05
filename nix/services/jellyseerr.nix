@@ -30,8 +30,9 @@
   };
 
   systemd.services.jellyseerr = {
-    after = ["network.target" "juicefs-mount.service" "jellyseerr-setup.service"];
-    requires = ["juicefs-mount.service" "jellyseerr-setup.service"];
+    after = ["network.target" "juicefs-mount.service" "jellyseerr-setup.service" "jellyfin.service" "sonarr.service" "radarr.service"];
+    requires = ["juicefs-mount.service" "jellyseerr-setup.service" "jellyfin.service" "sonarr.service" "radarr.service"];
     bindsTo = ["juicefs-mount.service"];
+    partOf = ["media-center.service"];
   };
 }

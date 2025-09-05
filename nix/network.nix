@@ -3,7 +3,7 @@
   pkgs,
   ...
 }: {
-  networking.hostName = "plex";
+  networking.hostName = "media-center";
   networking.networkmanager.enable = true;
 
   services.openssh = {

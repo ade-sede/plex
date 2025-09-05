@@ -14,9 +14,10 @@
   };
 
   systemd.services.sonarr = {
-    after = ["network.target" "juicefs-mount.service"];
-    requires = ["juicefs-mount.service"];
+    after = ["network.target" "juicefs-mount.service" "qbittorrent.service" "prowlarr.service"];
+    requires = ["juicefs-mount.service" "qbittorrent.service" "prowlarr.service"];
     bindsTo = ["juicefs-mount.service"];
+    partOf = ["media-center.service"];
 
     preStart = lib.mkAfter ''
             # Ensure config directory exists

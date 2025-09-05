@@ -20,15 +20,17 @@ in {
   systemd.services.juicefs-setup = {
     description = "Setup JuiceFS filesystem";
     wantedBy = [];
-    after = ["sqlite-setup.service"];
-    requires = ["sqlite-setup.service"];
-    partOf = ["plex.service"];
+    after = ["local-fs.target"];
     serviceConfig = {
       Type = "oneshot";
       User = "root";
       Group = "root";
       RemainAfterExit = true;
-      ExecStartPre = "${juicefs-setup-script}";
+      ExecStartPre = [
+        "${juicefs-setup-script}"
+        "+${pkgs.coreutils}/bin/touch ${dbPath}"
+        "+${pkgs.coreutils}/bin/chown root:root ${dbPath}"
+      ];
     };
     script = ''
       if ! ${pkgs.juicefs}/bin/juicefs status "sqlite3://${dbPath}" 2>/dev/null; then
@@ -38,7 +40,7 @@ in {
           --access-key "${ACCESS_KEY}" \
           --secret-key "${SECRET_KEY}" \
           "sqlite3://${dbPath}" \
-          plex
+          media-center
       fi
     '';
   };
@@ -48,7 +50,6 @@ in {
     wantedBy = [];
     after = ["juicefs-setup.service"];
     requires = ["juicefs-setup.service"];
-    partOf = ["plex.service"];
     serviceConfig = {
       Type = "forking";
       User = "root";

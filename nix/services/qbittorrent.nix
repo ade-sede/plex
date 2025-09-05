@@ -16,7 +16,7 @@
     after = ["network.target" "juicefs-mount.service"];
     requires = ["juicefs-mount.service"];
     bindsTo = ["juicefs-mount.service"];
-    wantedBy = ["multi-user.target"];
+    partOf = ["media-center.service"];
 
     preStart = ''
             # Create config directory

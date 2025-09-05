@@ -23,7 +23,7 @@
     SECRET_KEY = "REPLACE_ME";
     HTTP_PASSWORD = "REPLACE_ME";
   in {
-    nixosConfigurations.plex = nixpkgs.lib.nixosSystem {
+    nixosConfigurations.media-center = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = {
         inherit juiceFsDir dbPath mountPoint email BUCKET_URL ACCESS_KEY SECRET_KEY qbittorrentWebUIPort qbittorrentDownloadDir HTTP_PASSWORD;
@@ -33,17 +33,7 @@
         ./nix/system.nix
         ./nix/network.nix
         ./nix/users.nix
-        ./nix/sqlite.nix
-        ./nix/juicefs.nix
-        ./nix/plex.nix
-        ./nix/jellyfin.nix
-        ./nix/qbittorrent.nix
-        ./nix/sonarr.nix
-        ./nix/prowlarr.nix
-        ./nix/radarr.nix
-        ./nix/bazarr.nix
-        ./nix/jellyseerr.nix
-        ./nix/nginx.nix
+        ./nix/media-center.nix
       ];
     };
   };

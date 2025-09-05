@@ -14,9 +14,10 @@
   };
 
   systemd.services.bazarr = {
-    after = ["network.target" "juicefs-mount.service"];
-    requires = ["juicefs-mount.service"];
+    after = ["network.target" "juicefs-mount.service" "sonarr.service" "radarr.service"];
+    requires = ["juicefs-mount.service" "sonarr.service" "radarr.service"];
     bindsTo = ["juicefs-mount.service"];
+    partOf = ["media-center.service"];
 
     preStart = lib.mkAfter ''
                   mkdir -p ${mountPoint}/bazarr

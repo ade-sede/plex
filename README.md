@@ -20,7 +20,7 @@ Create a server with sufficient resources for media streaming:
 scw instance server create \
   type=PLAY2-NANO \
   image=ubuntu_jammy \
-  name=plex \
+  name=media-center \
   zone=fr-par-2 \
   ip=ipv6 \
   project-id=$PROJECT_ID \
@@ -58,7 +58,7 @@ scp root@$SERVER_IP:/etc/nixos/hardware-configuration.nix ./hardware-configurati
 
 ```bash
 git add hardware-configuration.nix
-git commit -m "Add plex server hardware config"
+git commit -m "Add media-center server hardware config"
 git push
 ```
 
@@ -75,7 +75,7 @@ In `flake.nix`.
 ### 5. Deploy NixOS configuration
 
 ```bash
-ssh root@$SERVER_IP "cd /var/lib/install && nixos-rebuild switch --flake .#plex"
+ssh root@$SERVER_IP "cd /var/lib/install && nixos-rebuild switch --flake .#media-center"
 ```
 
 **Note**: The SSL certificate generation will fail if the domain names are not setup yet. That's fine, you can simply rebuild later after making sure the domain name points toward the server.
