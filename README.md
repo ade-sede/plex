@@ -78,7 +78,7 @@ In `flake.nix`.
 ### 5. Deploy NixOS configuration
 
 ```bash
-ssh root@$SERVER_IP "cd /root/nixo && nixos-rebuild switch --flake .#media-center"
+ssh root@$SERVER_IP "cd /root/nixos && nixos-rebuild switch --flake .#media-center"
 ```
 
 **Note**: The SSL certificate generation will fail if the domain names are not setup yet. That's fine, you can simply rebuild later after making sure the domain name points toward the server.
