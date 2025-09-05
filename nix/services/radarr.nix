@@ -2,7 +2,7 @@
   config,
   pkgs,
   lib,
-  mountPoint,
+  JUICE_FS_ROOT,
   ...
 }: {
   services.radarr = {
@@ -10,7 +10,7 @@
     openFirewall = true;
     user = "root";
     group = "root";
-    dataDir = "${mountPoint}/radarr";
+    dataDir = "${JUICE_FS_ROOT}/radarr";
   };
 
   systemd.services.radarr = {
@@ -21,14 +21,14 @@
 
     preStart = lib.mkAfter ''
             # Ensure config directory exists
-            mkdir -p ${mountPoint}/radarr
+            mkdir -p ${JUICE_FS_ROOT}/radarr
 
             # Set URL base in Radarr configuration
-            if [ -f ${mountPoint}/radarr/config.xml ]; then
-              ${pkgs.gnused}/bin/sed -i 's|<UrlBase>.*</UrlBase>|<UrlBase>/radarr</UrlBase>|' ${mountPoint}/radarr/config.xml
+            if [ -f ${JUICE_FS_ROOT}/radarr/config.xml ]; then
+              ${pkgs.gnused}/bin/sed -i 's|<UrlBase>.*</UrlBase>|<UrlBase>/radarr</UrlBase>|' ${JUICE_FS_ROOT}/radarr/config.xml
             else
               # Create initial config.xml with URL base
-              cat > ${mountPoint}/radarr/config.xml << 'EOF'
+              cat > ${JUICE_FS_ROOT}/radarr/config.xml << 'EOF'
       <?xml version="1.0" encoding="utf-8"?>
       <Config>
         <BindAddress>*</BindAddress>

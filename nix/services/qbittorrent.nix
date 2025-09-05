@@ -2,11 +2,12 @@
   config,
   pkgs,
   lib,
-  mountPoint,
-  qbittorrentWebUIPort,
-  qbittorrentDownloadDir,
+  JUICE_FS_ROOT,
   ...
-}: {
+}: let
+  qbittorrentWebUIPort = 8080;
+  qbittorrentDownloadDir = "${JUICE_FS_ROOT}/downloads";
+in {
   environment.systemPackages = [
     pkgs.qbittorrent-nox
   ];

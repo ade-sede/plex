@@ -2,7 +2,7 @@
   config,
   pkgs,
   lib,
-  mountPoint,
+  JUICE_FS_ROOT,
   ...
 }: {
   services.jellyseerr = {
@@ -10,7 +10,7 @@
     port = 5055;
     openFirewall = true;
     package = pkgs.jellyseerr;
-    configDir = "${mountPoint}/jellyseerr";
+    configDir = "${JUICE_FS_ROOT}/jellyseerr";
   };
 
   systemd.services.jellyseerr-setup = {
@@ -19,8 +19,8 @@
     after = ["juicefs-mount.service"];
     requires = ["juicefs-mount.service"];
     script = ''
-      mkdir -p "${mountPoint}/jellyseerr"
-      chmod 755 "${mountPoint}/jellyseerr"
+      mkdir -p "${JUICE_FS_ROOT}/jellyseerr"
+      chmod 755 "${JUICE_FS_ROOT}/jellyseerr"
     '';
     serviceConfig = {
       Type = "oneshot";

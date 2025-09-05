@@ -2,7 +2,7 @@
   config,
   pkgs,
   lib,
-  mountPoint,
+  JUICE_FS_ROOT,
   ...
 }: {
   services.bazarr = {
@@ -10,7 +10,7 @@
     openFirewall = true;
     user = "root";
     group = "root";
-    dataDir = "${mountPoint}/bazarr";
+    dataDir = "${JUICE_FS_ROOT}/bazarr";
   };
 
   systemd.services.bazarr = {
@@ -20,13 +20,13 @@
     partOf = ["media-center.service"];
 
     preStart = lib.mkAfter ''
-                  mkdir -p ${mountPoint}/bazarr
+                  mkdir -p ${JUICE_FS_ROOT}/bazarr
 
-                  if [ -f ${mountPoint}/bazarr/config/config.ini ]; then
-                    ${pkgs.gnused}/bin/sed -i 's|base_url = .*|base_url = /bazarr|' ${mountPoint}/bazarr/config/config.ini
+                  if [ -f ${JUICE_FS_ROOT}/bazarr/config/config.ini ]; then
+                    ${pkgs.gnused}/bin/sed -i 's|base_url = .*|base_url = /bazarr|' ${JUICE_FS_ROOT}/bazarr/config/config.ini
                   else
-                    mkdir -p ${mountPoint}/bazarr/config
-                    cat > ${mountPoint}/bazarr/config/config.ini << 'EOF'
+                    mkdir -p ${JUICE_FS_ROOT}/bazarr/config
+                    cat > ${JUICE_FS_ROOT}/bazarr/config/config.ini << 'EOF'
       [general]
       ip = 0.0.0.0
       port = 6767

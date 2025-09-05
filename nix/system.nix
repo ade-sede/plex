@@ -3,14 +3,15 @@
   pkgs,
   ...
 }: {
+  system.stateVersion = "24.11";
+
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.supportedFilesystems = ["fuse"];
 
   time.timeZone = "UTC";
 
   nixpkgs.config.allowUnfree = true;
-
-  boot.supportedFilesystems = ["fuse"];
 
   environment.systemPackages = with pkgs; [
     vim
@@ -22,6 +23,4 @@
     qbittorrent-nox
     jellyseerr
   ];
-
-  system.stateVersion = "24.11";
 }

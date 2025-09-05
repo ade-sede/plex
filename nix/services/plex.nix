@@ -2,7 +2,7 @@
   config,
   pkgs,
   lib,
-  mountPoint,
+  JUICE_FS_ROOT,
   ...
 }: let
   plexPackage = pkgs.plex.override {
@@ -26,12 +26,12 @@ in {
       Group = "root";
       ExecStart = "${plexPackage}/bin/plexmediaserver";
       KillSignal = "SIGQUIT";
-      PIDFile = "${mountPoint}/plex/Plex Media Server/plexmediaserver.pid";
+      PIDFile = "${JUICE_FS_ROOT}/plex/Plex Media Server/plexmediaserver.pid";
       Restart = "on-failure";
     };
 
     environment = {
-      PLEX_DATADIR = "${mountPoint}/plex";
+      PLEX_DATADIR = "${JUICE_FS_ROOT}/plex";
       LD_LIBRARY_PATH = "/run/opengl-driver/lib";
       PLEX_MEDIA_SERVER_MAX_PLUGIN_PROCS = "6";
       PLEX_MEDIA_SERVER_TMPDIR = "/tmp";

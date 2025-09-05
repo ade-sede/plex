@@ -2,14 +2,14 @@
   config,
   pkgs,
   lib,
-  mountPoint,
+  JUICE_FS_ROOT,
   ...
 }: {
   services.jellyfin = {
     enable = true;
     openFirewall = true;
-    dataDir = "${mountPoint}/jellyfin";
-    cacheDir = "${mountPoint}/jellyfin-cache";
+    dataDir = "${JUICE_FS_ROOT}/jellyfin";
+    cacheDir = "${JUICE_FS_ROOT}/jellyfin-cache";
   };
 
   environment.systemPackages = with pkgs; [

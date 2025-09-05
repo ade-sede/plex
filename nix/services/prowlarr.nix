@@ -2,7 +2,7 @@
   config,
   pkgs,
   lib,
-  mountPoint,
+  JUICE_FS_ROOT,
   ...
 }: {
   services.prowlarr = {
@@ -35,12 +35,11 @@
       User = "root";
       Group = "root";
       StateDirectory = lib.mkForce "prowlarr";
-      ExecStart = lib.mkForce "${lib.getExe config.services.prowlarr.package} -nobrowser -data=${mountPoint}/prowlarr";
+      ExecStart = lib.mkForce "${lib.getExe config.services.prowlarr.package} -nobrowser -data=${JUICE_FS_ROOT}/prowlarr";
     };
 
     preStart = lib.mkAfter ''
-      mkdir -p ${mountPoint}/prowlarr
-      chown root:root ${mountPoint}/prowlarr
+      mkdir -p ${JUICE_FS_ROOT}/prowlarr
     '';
   };
 }

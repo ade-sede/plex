@@ -1,5 +1,5 @@
 {
-  description = "Plex & Jellyfin system configuration";
+  description = "A media center setup for home";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -9,24 +9,19 @@
     self,
     nixpkgs,
   }: let
-    juiceFsDir = "/var/lib/juice-fs";
-    dbPath = "${juiceFsDir}/metadata.db";
-    mountPoint = "${juiceFsDir}/mountpoint";
-    email = "adrien.de.sede@gmail.com";
-
-    qbittorrentWebUIPort = 8080;
-    qbittorrentDownloadDir = "${juiceFsDir}/mountpoint/downloads";
+    JUICE_FS_ROOT = "/mnt/juice";
+    ADMIN_EMAIL = "adrien.de.sede@gmail.com";
 
     # SECRETS - Fill these in but NEVER commit them
-    BUCKET_URL = "REPLACE_ME";
-    ACCESS_KEY = "REPLACE_ME";
-    SECRET_KEY = "REPLACE_ME";
-    HTTP_PASSWORD = "REPLACE_ME";
+    SECRET_BUCKET_URL = "REPLACE_ME";
+    SECRET_ACCESS_KEY = "REPLACE_ME";
+    SECRET_SECRET_KEY = "REPLACE_ME";
+    SECRET_HTTP_PASSWORD = "REPLACE_ME";
   in {
     nixosConfigurations.media-center = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = {
-        inherit juiceFsDir dbPath mountPoint email BUCKET_URL ACCESS_KEY SECRET_KEY qbittorrentWebUIPort qbittorrentDownloadDir HTTP_PASSWORD;
+        inherit JUICE_FS_ROOT ADMIN_EMAIL SECRET_BUCKET_URL SECRET_ACCESS_KEY SECRET_SECRET_KEY SECRET_HTTP_PASSWORD;
       };
       modules = [
         ./hardware-configuration.nix

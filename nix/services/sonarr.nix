@@ -2,7 +2,7 @@
   config,
   pkgs,
   lib,
-  mountPoint,
+  JUICE_FS_ROOT,
   ...
 }: {
   services.sonarr = {
@@ -10,7 +10,7 @@
     openFirewall = true;
     user = "root";
     group = "root";
-    dataDir = "${mountPoint}/sonarr";
+    dataDir = "${JUICE_FS_ROOT}/sonarr";
   };
 
   systemd.services.sonarr = {
@@ -21,14 +21,14 @@
 
     preStart = lib.mkAfter ''
             # Ensure config directory exists
-            mkdir -p ${mountPoint}/sonarr
+            mkdir -p ${JUICE_FS_ROOT}/sonarr
 
             # Set URL base in Sonarr configuration
-            if [ -f ${mountPoint}/sonarr/config.xml ]; then
-              ${pkgs.gnused}/bin/sed -i 's|<UrlBase>.*</UrlBase>|<UrlBase>/sonarr</UrlBase>|' ${mountPoint}/sonarr/config.xml
+            if [ -f ${JUICE_FS_ROOT}/sonarr/config.xml ]; then
+              ${pkgs.gnused}/bin/sed -i 's|<UrlBase>.*</UrlBase>|<UrlBase>/sonarr</UrlBase>|' ${JUICE_FS_ROOT}/sonarr/config.xml
             else
               # Create initial config.xml with URL base
-              cat > ${mountPoint}/sonarr/config.xml << 'EOF'
+              cat > ${JUICE_FS_ROOT}/sonarr/config.xml << 'EOF'
       <?xml version="1.0" encoding="utf-8"?>
       <Config>
         <BindAddress>*</BindAddress>
