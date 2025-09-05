@@ -74,7 +74,7 @@ ssh root@$SERVER_IP "git clone https://github.com/ade-sede/media-center.git /roo
 
 ### 4. Configure secrets
 
-In `flake.nix`.
+In `flake.nix`, on the remote
 
 ### 5. Deploy NixOS configuration
 
