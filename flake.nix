@@ -40,6 +40,7 @@
         ./nix/qbittorrent.nix
         ./nix/sonarr.nix
         ./nix/prowlarr.nix
+        ./nix/radarr.nix
         ./nix/nginx.nix
       ];
     };

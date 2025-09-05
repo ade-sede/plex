@@ -81,6 +81,20 @@ in {
             proxy_set_header X-Forwarded-Prefix /prowlarr;
           '';
         };
+        locations."/radarr/" = {
+          proxyPass = "http://127.0.0.1:7878/radarr/";
+          proxyWebsockets = true;
+          basicAuth = "Radarr Access";
+          basicAuthFile = "${httpAuth}";
+          extraConfig = ''
+            proxy_buffering off;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_set_header X-Forwarded-Host $http_host;
+            proxy_set_header X-Forwarded-Prefix /radarr;
+          '';
+        };
       };
       "jellyfin.ade-sede.com" = {
         enableACME = true;
@@ -135,6 +149,20 @@ in {
             proxy_set_header X-Forwarded-Proto $scheme;
             proxy_set_header X-Forwarded-Host $http_host;
             proxy_set_header X-Forwarded-Prefix /prowlarr;
+          '';
+        };
+        locations."/radarr/" = {
+          proxyPass = "http://127.0.0.1:7878/radarr/";
+          proxyWebsockets = true;
+          basicAuth = "Radarr Access";
+          basicAuthFile = "${httpAuth}";
+          extraConfig = ''
+            proxy_buffering off;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_set_header X-Forwarded-Host $http_host;
+            proxy_set_header X-Forwarded-Prefix /radarr;
           '';
         };
       };
