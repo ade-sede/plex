@@ -1,41 +1,3 @@
-# Plex & Jellyfin Media Server Setup
-
-This guide explains how to create Plex and Jellyfin media servers with distributed storage using JuiceFS and Scaleway object storage.
-
-## Basic working principle
-
-- Movies are stored in Object storages
-- We trick Plex/Jellyfin into thinking the object storage is a normal local filesystem using JuiceFS
-- JuiceFS stores some metadata in a SQLite database to help keep track of where things are
-- JuiceFS uses FUSE (Filesystem in Userspace) to mount the cloud storage as a local directory
-
-### Service Architecture
-
-The system uses 4 systemd services with cascading dependencies:
-
-```
-sqlite-setup → juicefs-setup → juicefs-mount → plex/jellyfin
-```
-
-1. **sqlite-setup** - Creates SQLite database for JuiceFS metadata
-1. **juicefs-setup** - Formats JuiceFS filesystem and creates mount directories
-1. **juicefs-mount** - Mounts JuiceFS as FUSE filesystem
-1. **plex/jellyfin** - Runs both media servers using the mounted filesystem
-
-Starting/stopping either service automatically starts/stops all dependent services in the correct order.
-
-## Basic installation principles
-
-- Everything is managed via nix
-- When the instance is created, it is instantly 'infected' with NixOS
-- After the initial instance is completed
-  - we need to update the user passwords for security reasons
-  - we need to update the git repo with the latest hardware config, just to make sure the repo is up to date and contains a 'snapshot' of the machine's config
-- Once the install is completed, we can apply config update simply by 'rebuilding' the system, there is no need to restart the installation from scratch
-- The nix flake exposes all the variables in flake.nix for easy configuration
-
-## Prerequisites
-
 - Install Scaleway CLI: `curl -s https://raw.githubusercontent.com/scaleway/scaleway-cli/master/scripts/get.sh | sh`
 - Configure authentication: `scw init`
 - Set project ID environment variable: `export PROJECT_ID=XXXXX`
@@ -108,31 +70,7 @@ ssh root@$SERVER_IP "git clone https://github.com/ade-sede/media-center.git /var
 
 ### 4. Configure secrets
 
-Edit `flake.nix` and replace the placeholder values with your actual Scaleway credentials:
-
-```nix
-# SECRETS - Fill these in but NEVER commit them
-BUCKET_URL = "https://your-bucket-name.s3.fr-par.scw.cloud";
-ACCESS_KEY = "your-scaleway-access-key"; 
-SECRET_KEY = "your-scaleway-secret-key";
-```
-
-**Replace the placeholder values:**
-
-- `your-bucket-name`: Your actual Scaleway bucket name
-- `your-scaleway-access-key`: Your Scaleway access key
-- `your-scaleway-secret-key`: Your Scaleway secret key
-
-**⚠️ IMPORTANT**: Never commit these actual values to git. The secrets should only exist in your local working copy.
-
-## Domain Configuration
-
-Domains are hardcoded in `nix/nginx.nix`. To change them, edit the virtualHosts section:
-
-- `plex.ade-sede.com` - Plex server (port 32400)
-- `jellyfin.ade-sede.com` - Jellyfin server (port 8096)
-
-Make sure your DNS records point to your server IP before rebuilding.
+In `flake.nix`.
 
 ### 5. Deploy NixOS configuration
 
@@ -166,23 +104,3 @@ export USERNAME=ade-sede
 # Copy SSH key for passwordless access
 ssh-copy-id $USERNAME@$SERVER_IP
 ```
-
-## qBittorrent Setup
-
-qBittorrent-nox is configured to run automatically as a systemd service. The legal disclaimer is automatically accepted via the `--confirm-legal-notice` flag.
-
-### WebUI Access
-
-The WebUI is accessible via nginx reverse proxy at:
-
-- **https://plex.ade-sede.com/torrent/**
-- **https://jellyfin.ade-sede.com/torrent/**
-
-### Authentication
-
-The WebUI is protected by nginx HTTP Basic Authentication:
-
-- **Username**: `ade-sede`
-- **Password**: Set via `qbittorrentNginxPassword` in flake.nix
-
-Your browser will prompt for credentials when accessing the WebUI. Once authenticated, you'll have full access to the qBittorrent interface without additional login prompts.
