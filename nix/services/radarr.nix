@@ -4,7 +4,9 @@
   lib,
   JUICE_FS_ROOT,
   ...
-}: {
+}: let
+  configHelpers = import ../lib/config-helpers.nix {inherit pkgs lib;};
+in {
   services.radarr = {
     enable = true;
     openFirewall = true;
@@ -20,31 +22,19 @@
     partOf = ["media-center.service"];
 
     preStart = lib.mkAfter ''
-            # Ensure config directory exists
-            mkdir -p ${JUICE_FS_ROOT}/radarr
-
-            # Set URL base in Radarr configuration
-            if [ -f ${JUICE_FS_ROOT}/radarr/config.xml ]; then
-              ${pkgs.gnused}/bin/sed -i 's|<UrlBase>.*</UrlBase>|<UrlBase>/radarr</UrlBase>|' ${JUICE_FS_ROOT}/radarr/config.xml
-            else
-              # Create initial config.xml with URL base
-              cat > ${JUICE_FS_ROOT}/radarr/config.xml << 'EOF'
-      <?xml version="1.0" encoding="utf-8"?>
-      <Config>
-        <BindAddress>*</BindAddress>
-        <Port>7878</Port>
-        <SslPort>9898</SslPort>
-        <EnableSsl>False</EnableSsl>
-        <LaunchBrowser>False</LaunchBrowser>
-        <AuthenticationMethod>None</AuthenticationMethod>
-        <AuthenticationRequired>Enabled</AuthenticationRequired>
-        <Branch>master</Branch>
-        <LogLevel>info</LogLevel>
-        <UrlBase>/radarr</UrlBase>
-        <InstanceName>Radarr</InstanceName>
-      </Config>
-      EOF
-            fi
+      mkdir -p ${JUICE_FS_ROOT}/radarr
+      ${configHelpers.ensureConfigFromTemplate {
+        template = "radarr.config.xml.template";
+        destination = "${JUICE_FS_ROOT}/radarr/config.xml";
+        substitutions = {
+          PORT = "7878";
+          URL_BASE = "/radarr";
+          INSTANCE_NAME = "Radarr";
+        };
+        updates = {
+          "<UrlBase>.*</UrlBase>" = "<UrlBase>/radarr</UrlBase>";
+        };
+      }}
     '';
   };
 }

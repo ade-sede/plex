@@ -4,7 +4,9 @@
   lib,
   JUICE_FS_ROOT,
   ...
-}: {
+}: let
+  configHelpers = import ../lib/config-helpers.nix {inherit pkgs lib;};
+in {
   services.bazarr = {
     enable = true;
     openFirewall = true;
@@ -20,34 +22,19 @@
     partOf = ["media-center.service"];
 
     preStart = lib.mkAfter ''
-                  mkdir -p ${JUICE_FS_ROOT}/bazarr
-
-                  if [ -f ${JUICE_FS_ROOT}/bazarr/config/config.ini ]; then
-                    ${pkgs.gnused}/bin/sed -i 's|base_url = .*|base_url = /bazarr|' ${JUICE_FS_ROOT}/bazarr/config/config.ini
-                  else
-                    mkdir -p ${JUICE_FS_ROOT}/bazarr/config
-                    cat > ${JUICE_FS_ROOT}/bazarr/config/config.ini << 'EOF'
-      [general]
-      ip = 0.0.0.0
-      port = 6767
-      base_url = /bazarr
-      path_mappings = []
-      debug = False
-      branch = master
-      auto_update = True
-      single_language = False
-      minimum_score = 90
-      use_scenename = True
-      use_postprocessing = False
-      postprocessing_cmd =
-      use_sonarr = True
-      use_radarr = True
-      enabled_providers =
-      login_required = False
-      username =
-      password =
-      EOF
-                  fi
+      mkdir -p ${JUICE_FS_ROOT}/bazarr
+      ${configHelpers.ensureConfigFromTemplate {
+        template = "bazarr.config.ini.template";
+        destination = "${JUICE_FS_ROOT}/bazarr/config/config.ini";
+        substitutions = {
+          PORT = "6767";
+          URL_BASE = "/bazarr";
+        };
+        updates = {
+          "base_url = .*" = "base_url = /bazarr";
+        };
+        createDirs = true;
+      }}
     '';
   };
 }

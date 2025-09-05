@@ -5,8 +5,7 @@
   JUICE_FS_ROOT,
   ...
 }: let
-  qbittorrentWebUIPort = 8080;
-  qbittorrentDownloadDir = "${JUICE_FS_ROOT}/downloads";
+  configHelpers = import ../lib/config-helpers.nix {inherit pkgs lib;};
 in {
   environment.systemPackages = [
     pkgs.qbittorrent-nox
@@ -20,42 +19,25 @@ in {
     partOf = ["media-center.service"];
 
     preStart = ''
-            # Create config directory
-            mkdir -p /root/.config/qBittorrent
-
-            # Write config directly inline
-            cat > /root/.config/qBittorrent/qBittorrent.conf << 'EOF'
-      [BitTorrent]
-      Session\QueueingSystemEnabled=false
-
-      [LegalNotice]
-      Accepted=true
-
-      [Meta]
-      MigrationVersion=8
-
-      [Network]
-      Cookies=@Invalid()
-
-      [Preferences]
-      WebUI\Enabled=true
-      WebUI\LocalHostAuth=false
-      WebUI\Port=${toString qbittorrentWebUIPort}
-      WebUI\Username=ade-sede
-
-      Downloads\SavePath=${qbittorrentDownloadDir}
-      General\UseRandomPort=true
-      EOF
-
-            # Create download directory
-            mkdir -p ${qbittorrentDownloadDir}
+      mkdir -p /root/.config/qBittorrent
+      mkdir -p ${JUICE_FS_ROOT}/downloads
+      ${configHelpers.createConfigFromTemplate {
+        template = "qbittorrent.conf.template";
+        destination = "/root/.config/qBittorrent/qBittorrent.conf";
+        substitutions = {
+          WEBUI_PORT = "8080";
+          USERNAME = "ade-sede";
+          DEFAULT_DOWNLOAD_DIR = "${JUICE_FS_ROOT}/downloads";
+        };
+        createDirs = false;
+      }}
     '';
 
     serviceConfig = {
       Type = "simple";
       User = "root";
       Group = "root";
-      ExecStart = "${pkgs.qbittorrent-nox}/bin/qbittorrent-nox --confirm-legal-notice --webui-port=${toString qbittorrentWebUIPort} --save-path=${qbittorrentDownloadDir}";
+      ExecStart = "${pkgs.qbittorrent-nox}/bin/qbittorrent-nox --confirm-legal-notice --webui-port=8080 --save-path=${JUICE_FS_ROOT}/downloads";
       Restart = "on-failure";
       RestartSec = "5s";
       WorkingDirectory = "/root";
@@ -63,5 +45,5 @@ in {
     };
   };
 
-  networking.firewall.allowedTCPPorts = [qbittorrentWebUIPort];
+  networking.firewall.allowedTCPPorts = [8080];
 }
