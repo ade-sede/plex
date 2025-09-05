@@ -34,5 +34,10 @@
     requires = ["juicefs-mount.service" "jellyseerr-setup.service" "jellyfin.service" "sonarr.service" "radarr.service"];
     bindsTo = ["juicefs-mount.service"];
     partOf = ["media-center.service"];
+    serviceConfig = {
+      User = lib.mkForce "root";
+      Group = lib.mkForce "root";
+      PrivateUsers = lib.mkForce false;
+    };
   };
 }
