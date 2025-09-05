@@ -23,6 +23,7 @@ in {
 
     preStart = lib.mkAfter ''
       mkdir -p ${JUICE_FS_ROOT}/radarr
+      mkdir -p ${JUICE_FS_ROOT}/movies
       ${configHelpers.ensureConfigFromTemplate {
         template = "radarr.config.xml.template";
         destination = "${JUICE_FS_ROOT}/radarr/config.xml";

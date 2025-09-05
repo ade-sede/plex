@@ -23,6 +23,8 @@ in {
 
     preStart = lib.mkAfter ''
       mkdir -p ${JUICE_FS_ROOT}/sonarr
+      mkdir -p ${JUICE_FS_ROOT}/shows
+      mkdir -p ${JUICE_FS_ROOT}/anime
       ${configHelpers.ensureConfigFromTemplate {
         template = "sonarr.config.xml.template";
         destination = "${JUICE_FS_ROOT}/sonarr/config.xml";
