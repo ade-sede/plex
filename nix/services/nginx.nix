@@ -9,7 +9,7 @@
   inherit (nginxHelpers) standardProxyHeaders plexProxyHeaders mkPublicLocation mkProtectedLocation;
 
   httpAuth = pkgs.runCommand "http-htpasswd" {} ''
-    echo "ade-sede:$(${pkgs.openssl}/bin/openssl passwd -apr1 '${SECRET_HTTP_PASSWORD}')" > $out
+    echo "admin:$(${pkgs.openssl}/bin/openssl passwd -apr1 '${SECRET_HTTP_PASSWORD}')" > $out
   '';
 in {
   services.nginx = {
