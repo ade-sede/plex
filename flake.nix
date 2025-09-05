@@ -42,6 +42,7 @@
         ./nix/prowlarr.nix
         ./nix/radarr.nix
         ./nix/bazarr.nix
+        ./nix/jellyseerr.nix
         ./nix/nginx.nix
       ];
     };

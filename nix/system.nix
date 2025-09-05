@@ -20,6 +20,7 @@
     juicefs
     fuse
     qbittorrent-nox
+    jellyseerr
   ];
 
   system.stateVersion = "24.11";
