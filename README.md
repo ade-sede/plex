@@ -22,6 +22,7 @@ scw instance server create \
   image=ubuntu_jammy \
   name=media-center \
   zone=fr-par-2 \
+  root-volume=local:20GB \
   ip=ipv6 \
   project-id=$PROJECT_ID \
   cloud-init=@nixos-infect-cloud-init.yaml
@@ -65,7 +66,7 @@ git push
 ### 3. Clone repository on remote server
 
 ```bash
-ssh root@$SERVER_IP "git clone https://github.com/ade-sede/media-center.git /var/lib/install"
+ssh root@$SERVER_IP "git clone https://github.com/ade-sede/media-center.git /root/nixos"
 ```
 
 ### 4. Configure secrets
@@ -75,7 +76,7 @@ In `flake.nix`.
 ### 5. Deploy NixOS configuration
 
 ```bash
-ssh root@$SERVER_IP "cd /var/lib/install && nixos-rebuild switch --flake .#media-center"
+ssh root@$SERVER_IP "cd /root/nixo && nixos-rebuild switch --flake .#media-center"
 ```
 
 **Note**: The SSL certificate generation will fail if the domain names are not setup yet. That's fine, you can simply rebuild later after making sure the domain name points toward the server.
