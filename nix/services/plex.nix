@@ -14,6 +14,7 @@ in {
   ];
 
   systemd.services.plex = {
+    enable = false;
     description = "Plex Media Server";
     after = ["network.target" "juicefs-mount.service" "jellyfin.service" "sonarr.service"];
     requires = ["juicefs-mount.service" "jellyfin.service" "sonarr.service"];
