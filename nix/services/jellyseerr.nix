@@ -19,7 +19,7 @@
     after = ["juicefs-mount.service"];
     requires = ["juicefs-mount.service"];
     script = ''
-      mkdir -p "${JUICE_FS_ROOT}/jellyseerr"
+      mkdir -p "${JUICE_FS_ROOT}/jellyseerr/logs"
       chmod 755 "${JUICE_FS_ROOT}/jellyseerr"
     '';
     serviceConfig = {
