@@ -41,6 +41,7 @@
         ./nix/sonarr.nix
         ./nix/prowlarr.nix
         ./nix/radarr.nix
+        ./nix/bazarr.nix
         ./nix/nginx.nix
       ];
     };

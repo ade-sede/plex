@@ -95,6 +95,20 @@ in {
             proxy_set_header X-Forwarded-Prefix /radarr;
           '';
         };
+        locations."/bazarr/" = {
+          proxyPass = "http://127.0.0.1:6767/bazarr/";
+          proxyWebsockets = true;
+          basicAuth = "Bazarr Access";
+          basicAuthFile = "${httpAuth}";
+          extraConfig = ''
+            proxy_buffering off;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_set_header X-Forwarded-Host $http_host;
+            proxy_set_header X-Forwarded-Prefix /bazarr;
+          '';
+        };
       };
       "jellyfin.ade-sede.com" = {
         enableACME = true;
@@ -163,6 +177,20 @@ in {
             proxy_set_header X-Forwarded-Proto $scheme;
             proxy_set_header X-Forwarded-Host $http_host;
             proxy_set_header X-Forwarded-Prefix /radarr;
+          '';
+        };
+        locations."/bazarr/" = {
+          proxyPass = "http://127.0.0.1:6767/bazarr/";
+          proxyWebsockets = true;
+          basicAuth = "Bazarr Access";
+          basicAuthFile = "${httpAuth}";
+          extraConfig = ''
+            proxy_buffering off;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_set_header X-Forwarded-Host $http_host;
+            proxy_set_header X-Forwarded-Prefix /bazarr;
           '';
         };
       };
