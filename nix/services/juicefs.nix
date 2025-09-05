@@ -12,7 +12,10 @@
     ${pkgs.coreutils}/bin/mkdir -p ${JUICE_FS_ROOT}
   '';
   juicefs-mount-script = pkgs.writeShellScript "juicefs-mount" ''
-    ${pkgs.juicefs}/bin/juicefs mount sqlite3:///etc/juice/metadata.db ${JUICE_FS_ROOT} --background
+    ${pkgs.juicefs}/bin/juicefs mount sqlite3:///etc/juice/metadata.db ${JUICE_FS_ROOT} \
+      --background \
+      --cache-size 10240 \
+      --free-space-ratio 0.2
   '';
 in {
   systemd.services.juicefs-setup = {

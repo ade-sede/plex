@@ -11,6 +11,14 @@
 
   time.timeZone = "UTC";
 
+  services.journald.extraConfig = ''
+    SystemMaxUse=150M
+    SystemKeepFree=1G
+    SystemMaxFileSize=15M
+    SystemMaxFiles=10
+    MaxRetentionSec=2week
+  '';
+
   nixpkgs.config.allowUnfree = true;
 
   environment.systemPackages = with pkgs; [
