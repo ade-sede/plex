@@ -11,7 +11,6 @@
     openFirewall = true;
     package = pkgs.jellyseerr;
     configDir = "${mountPoint}/jellyseerr";
-    dataDir = "${mountPoint}/jellyseerr";
   };
 
   systemd.services.jellyseerr = {
