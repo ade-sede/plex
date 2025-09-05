@@ -31,6 +31,7 @@
     serviceConfig = {
       User = lib.mkForce "root";
       Group = lib.mkForce "root";
+      PrivateUsers = lib.mkForce false;
     };
   };
 }
