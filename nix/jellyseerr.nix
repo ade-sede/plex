@@ -10,6 +10,8 @@
     port = 5055;
     openFirewall = true;
     package = pkgs.jellyseerr;
+    configDir = "${mountPoint}/jellyseerr";
+    dataDir = "${mountPoint}/jellyseerr";
   };
 
   systemd.services.jellyseerr = {

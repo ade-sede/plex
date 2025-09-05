@@ -8,6 +8,8 @@
   services.jellyfin = {
     enable = true;
     openFirewall = true;
+    dataDir = "${mountPoint}/jellyfin";
+    cacheDir = "${mountPoint}/jellyfin-cache";
   };
 
   environment.systemPackages = with pkgs; [
@@ -21,14 +23,7 @@
     requires = ["juicefs-mount.service"];
     bindsTo = ["juicefs-mount.service"];
 
-    serviceConfig = {
-      StateDirectory = lib.mkForce "${mountPoint}/jellyfin";
-      CacheDirectory = lib.mkForce "${mountPoint}/jellyfin-cache";
-    };
-
     environment = {
-      JELLYFIN_DATA_DIR = "${mountPoint}/jellyfin";
-      JELLYFIN_CACHE_DIR = "${mountPoint}/jellyfin-cache";
       LD_LIBRARY_PATH = "/run/opengl-driver/lib";
     };
   };
