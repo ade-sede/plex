@@ -22,7 +22,6 @@ scw instance server create \
   image=ubuntu_jammy \
   name=media-center \
   zone=fr-par-2 \
-  root-volume=local:20GB \
   ip=ipv6 \
   project-id=$PROJECT_ID \
   cloud-init=@nixos-infect-cloud-init.yaml
@@ -45,6 +44,9 @@ ssh root@$SERVER_IP "nixos-version"
 
 # Monitor NixOS installation progress (if still installing)
 ssh root@$SERVER_IP "tail -f /tmp/infect.log"
+
+# Remove backup of initial ubuntu
+ssh root@$SERVER_IP "rm -rf /old-root"
 ```
 
 ## Deploy our NixOS configuration
