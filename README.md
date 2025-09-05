@@ -21,6 +21,7 @@ scw instance server create \
   type=PLAY2-NANO \
   image=ubuntu_jammy \
   name=media-center \
+  root-volume=block:25GB \
   zone=fr-par-2 \
   ip=ipv6 \
   project-id=$PROJECT_ID \
@@ -45,7 +46,7 @@ ssh root@$SERVER_IP "nixos-version"
 # Monitor NixOS installation progress (if still installing)
 ssh root@$SERVER_IP "tail -f /tmp/infect.log"
 
-# Remove backup of initial ubuntu
+# Remove the backup of the initial ubuntu install
 ssh root@$SERVER_IP "rm -rf /old-root"
 ```
 
