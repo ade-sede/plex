@@ -23,6 +23,14 @@
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     proxy_set_header X-Forwarded-Proto $scheme;
     proxy_set_header X-Forwarded-Host $http_host;
+    proxy_set_header X-Forwarded-Prefix /plex;
+    proxy_redirect ~^/(.*)$ /plex/$1;
+    proxy_redirect default;
+    sub_filter_once off;
+    sub_filter_types *;
+    sub_filter 'src="/' 'src="/plex/';
+    sub_filter 'href="/' 'href="/plex/';
+    sub_filter '"/' '"/plex/';
   '';
 
   mkPublicLocation = port: subpath: extraHeaders: {

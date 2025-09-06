@@ -39,6 +39,7 @@ in {
       PLEX_MEDIA_SERVER_USE_SYSLOG = "true";
       LC_ALL = "en_US.UTF-8";
       LANG = "en_US.UTF-8";
+      ADVERTISE_IP = "https://media.ade-sede.com:443/plex/";
     };
   };
 
