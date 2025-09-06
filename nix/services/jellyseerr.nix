@@ -21,6 +21,7 @@
     script = ''
       mkdir -p "${JUICE_FS_ROOT}/jellyseerr/logs"
       chmod 755 "${JUICE_FS_ROOT}/jellyseerr"
+      sleep 10
     '';
     serviceConfig = {
       Type = "oneshot";
