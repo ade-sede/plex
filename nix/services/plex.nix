@@ -40,6 +40,7 @@ in {
       LC_ALL = "en_US.UTF-8";
       LANG = "en_US.UTF-8";
       ADVERTISE_IP = "https://plex.ade-sede.com:443/";
+      PLEX_CLAIM = "claim-your-token-here";
     };
   };
 
