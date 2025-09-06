@@ -25,7 +25,6 @@ in {
         forceSSL = true;
 
         locations."/" = mkPublicLocation 5055 "/" standardProxyHeaders; # Jellyseerr
-        locations."/plex/" = mkPublicLocation 32400 "/" plexProxyHeaders;
         locations."/jellyfin/" = mkPublicLocation 8096 "/" standardProxyHeaders;
 
         locations."/torrent/" = mkProtectedLocation "/torrent/" 8080 "/" "qBittorrent" httpAuth standardProxyHeaders;
@@ -34,6 +33,12 @@ in {
         locations."/radarr/" = mkProtectedLocation "/radarr/" 7878 "/radarr/" "Radarr" httpAuth standardProxyHeaders;
         locations."/bazarr/" = mkProtectedLocation "/bazarr/" 6767 "/bazarr/" "Bazarr" httpAuth standardProxyHeaders;
         locations."/health/" = mkProtectedLocation "/health/" 5000 "/" "System Health" httpAuth standardProxyHeaders;
+      };
+
+      "plex.ade-sede.com" = {
+        enableACME = true;
+        forceSSL = true;
+        locations."/" = mkPublicLocation 32400 "/" plexProxyHeaders;
       };
     };
   };
