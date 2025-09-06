@@ -13,6 +13,7 @@
     ./services/radarr.nix
     ./services/bazarr.nix
     ./services/jellyseerr.nix
+    ./services/systemctl-dashboard.nix
     ./services/nginx.nix
   ];
 

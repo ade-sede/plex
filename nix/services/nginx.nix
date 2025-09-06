@@ -33,6 +33,7 @@ in {
         locations."/prowlarr/" = mkProtectedLocation "/prowlarr/" 9696 "/prowlarr/" "Prowlarr" httpAuth standardProxyHeaders;
         locations."/radarr/" = mkProtectedLocation "/radarr/" 7878 "/radarr/" "Radarr" httpAuth standardProxyHeaders;
         locations."/bazarr/" = mkProtectedLocation "/bazarr/" 6767 "/bazarr/" "Bazarr" httpAuth standardProxyHeaders;
+        locations."/health/" = mkProtectedLocation "/health/" 5000 "/" "System Health" httpAuth standardProxyHeaders;
       };
     };
   };
