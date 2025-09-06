@@ -10,7 +10,6 @@
     port = 5055;
     openFirewall = true;
     package = pkgs.jellyseerr;
-    configDir = "${JUICE_FS_ROOT}/jellyseerr";
   };
 
   systemd.services.jellyseerr-setup = {
@@ -19,9 +18,9 @@
     after = ["juicefs-mount.service"];
     requires = ["juicefs-mount.service"];
     script = ''
-      mkdir -p "${JUICE_FS_ROOT}/jellyseerr/logs"
+      mkdir -p "${JUICE_FS_ROOT}/jellyseerr"
       chmod 755 "${JUICE_FS_ROOT}/jellyseerr"
-      sleep 10
+      ln -sf "${JUICE_FS_ROOT}/jellyseerr" /var/lib/jellyseerr/data || true
     '';
     serviceConfig = {
       Type = "oneshot";
